@@ -10,6 +10,12 @@
     <height>300</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>Thematic accuracy</string>
   </property>
@@ -231,7 +237,7 @@
        <rect>
         <x>10</x>
         <y>13</y>
-        <width>175</width>
+        <width>160</width>
         <height>20</height>
        </rect>
       </property>
@@ -250,7 +256,7 @@
        <rect>
         <x>10</x>
         <y>32</y>
-        <width>175</width>
+        <width>160</width>
         <height>22</height>
        </rect>
       </property>
@@ -261,9 +267,9 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>195</x>
+        <x>175</x>
         <y>32</y>
-        <width>175</width>
+        <width>160</width>
         <height>22</height>
        </rect>
       </property>
@@ -271,9 +277,9 @@
      <widget class="QLabel" name="label_6">
       <property name="geometry">
        <rect>
-        <x>195</x>
+        <x>175</x>
         <y>13</y>
-        <width>175</width>
+        <width>160</width>
         <height>20</height>
        </rect>
       </property>
@@ -290,7 +296,7 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>378</x>
+        <x>340</x>
         <y>32</y>
         <width>22</width>
         <height>22</height>
@@ -343,7 +349,7 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>404</x>
+        <x>365</x>
         <y>32</y>
         <width>35</width>
         <height>22</height>
@@ -351,6 +357,64 @@
       </property>
       <property name="text">
        <string>Auto</string>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="bt_clear">
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>32</y>
+        <width>22</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="palette">
+       <palette>
+        <active>
+         <colorrole role="ButtonText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </active>
+        <inactive>
+         <colorrole role="ButtonText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </inactive>
+        <disabled>
+         <colorrole role="ButtonText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>120</red>
+            <green>120</green>
+            <blue>120</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </disabled>
+       </palette>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>X</string>
       </property>
       <property name="autoDefault">
        <bool>false</bool>
@@ -432,25 +496,6 @@
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QLabel" name="label_8">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>0</y>
-         <width>80</width>
-         <height>80</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap>sistematico.jpg</pixmap>
-       </property>
-       <property name="scaledContents">
-        <bool>true</bool>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_11">
        <property name="geometry">
         <rect>
@@ -503,6 +548,31 @@
         <number>999</number>
        </property>
       </widget>
+      <widget class="QLabel" name="siste">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>0</y>
+         <width>80</width>
+         <height>80</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap>sistematico.jpg</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="simple">
       <property name="geometry">
@@ -533,25 +603,6 @@
        </property>
        <property name="autoDefault">
         <bool>false</bool>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_9">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>0</y>
-         <width>80</width>
-         <height>80</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap>simple.jpg</pixmap>
-       </property>
-       <property name="scaledContents">
-        <bool>true</bool>
        </property>
       </widget>
       <widget class="QSpinBox" name="s_simple">
@@ -625,6 +676,28 @@
         <double>99999999.989999994635582</double>
        </property>
       </widget>
+      <widget class="QLabel" name="randon">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>0</y>
+         <width>80</width>
+         <height>80</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap>simple.jpg</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+       <property name="margin">
+        <number>-1</number>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="stratified">
       <property name="geometry">
@@ -658,25 +731,6 @@
        </property>
        <property name="autoDefault">
         <bool>false</bool>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_10">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>0</y>
-         <width>80</width>
-         <height>80</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap>estratificado.jpg</pixmap>
-       </property>
-       <property name="scaledContents">
-        <bool>true</bool>
        </property>
       </widget>
       <widget class="QLabel" name="label_14">
@@ -800,6 +854,25 @@
        </property>
        <property name="text">
         <string>Sample = Number of points for Sample by feature or Sample by category</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="stra">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>0</y>
+         <width>80</width>
+         <height>80</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap>estratificado.jpg</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
        </property>
       </widget>
      </widget>
@@ -970,6 +1043,63 @@
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="help_w">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>10</y>
+     <width>20</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="palette">
+    <palette>
+     <active>
+      <colorrole role="Button">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>85</red>
+         <green>170</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </active>
+     <inactive>
+      <colorrole role="Button">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>85</red>
+         <green>170</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </inactive>
+     <disabled>
+      <colorrole role="Button">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>85</red>
+         <green>170</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </disabled>
+    </palette>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>?</string>
    </property>
   </widget>
  </widget>

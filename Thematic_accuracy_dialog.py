@@ -23,7 +23,6 @@
 """
 
 import os
-
 from qgis import processing
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
@@ -37,6 +36,7 @@ import numpy as np
 from datetime import datetime
 from qgis.utils import iface
 import webbrowser
+from PyQt5.QtGui import QPixmap
 
 # Se instancia el proyecto
 project = QgsProject.instance()
@@ -79,20 +79,63 @@ class ThematicDialog(QtWidgets.QDialog, FORM_CLASS):
         self.data_next.clicked.connect(self.campos)
         self.add.clicked.connect(self.add_attr)
         self.field_next.clicked.connect(self.muestreo)
+        self.sample_next1.clicked.connect(self.eval_sis)
         self.sample_next2.clicked.connect(self.eval_sim)
         self.sample_next3.clicked.connect(self.eval_est)
-        self.sample_next1.clicked.connect(self.eval_sis)
         self.field_auto.clicked.connect(self.auto)
         self.bt_result.clicked.connect(self.v_result)
         self.refresh.clicked.connect(self.reload_c)
         self.save_fic.clicked.connect(self.save_html)
+        self.help_w.clicked.connect(self.help_win)
+        self.bt_clear.clicked.connect(self.clear_win)
+        self.siste.clear()
+        ruta_img1 = os.path.join(os.path.dirname(__file__), r'imagen\sistematico.jpg')
+        imagen1 = QPixmap(ruta_img1)
+        self.siste.setPixmap(imagen1)
+        self.siste.setScaledContents(True)
+        self.randon.clear()
+        ruta_img2 = os.path.join(os.path.dirname(__file__), r'imagen\simple.jpg')
+        imagen2 = QPixmap(ruta_img2)
+        self.randon.setPixmap(imagen2)
+        self.randon.setScaledContents(True)
+        self.stra.clear()
+        ruta_img3 = os.path.join(os.path.dirname(__file__), r'imagen\estratificado.jpg')
+        imagen3 = QPixmap(ruta_img3)
+        self.stra.setPixmap(imagen3)
+        self.stra.setScaledContents(True)
 
         global option_s
         option_s=""
-
         self.reload_c()
-
         self.data_eva.currentIndexChanged.connect(self.selection_ref)
+
+    def help_win(self):
+        page_help="http://thematicaccuracy.hol.es/"
+        webbrowser.open(page_help, new=0, autoraise=True)
+
+    def clear_win(self):
+        if 'list_rel' in globals():
+            global list_rel
+            del list_rel
+            global list_text
+            del list_text
+            global list_a
+            del list_a
+            global list_b
+            del list_b
+            global list_text_e
+            del list_text_e
+            global list_text_r
+            del list_text_r
+            self.campos()
+            self.tab_rel.clear()
+            self.field_eva.setEnabled(True)
+            self.field_ref.setEnabled(True)
+            self.field_next.setEnabled(False)
+            self.tabWidget.setTabEnabled(2,False)
+            self.tabWidget.setTabEnabled(3,False)
+        else:
+            pass
 
     def reload_c(self):
         global layer
@@ -433,8 +476,11 @@ class ThematicDialog(QtWidgets.QDialog, FORM_CLASS):
         else:
             self.sample_next3.setEnabled(False)
 
-    def eval_sis(self):
+    def mens_push(self):
         iface.messageBar().pushMessage("Thematic accuracy",'Running sampling, please wait...', level=Qgis.Info, duration=10)
+
+    def eval_sis(self):
+        self.mens_push()   
         self.tabWidget.setTabEnabled(3,True)
         self.tabWidget.setCurrentIndex(3)
         self.label_15.setText("Selected sampling: Systematic Sampling")
@@ -485,7 +531,7 @@ class ThematicDialog(QtWidgets.QDialog, FORM_CLASS):
         self.matriz()
 
     def eval_sim(self):
-        iface.messageBar().pushMessage("Thematic accuracy",'Running sampling, please wait...', level=Qgis.Info, duration=10)
+        self.mens_push()
         self.tabWidget.setTabEnabled(3,True)
         self.tabWidget.setCurrentIndex(3)
         self.label_15.setText("Selected sampling: Simple Random Sampling")
@@ -513,7 +559,7 @@ class ThematicDialog(QtWidgets.QDialog, FORM_CLASS):
         self.matriz()
 
     def eval_est(self):
-        iface.messageBar().pushMessage("Thematic accuracy",'Running sampling, please wait...', level=Qgis.Info, duration=10)
+        self.mens_push()
         self.tabWidget.setTabEnabled(3,True)
         self.tabWidget.setCurrentIndex(3)
         self.label_15.setText("Selected sampling: Stratified Random Sampling")
@@ -632,7 +678,9 @@ class ThematicDialog(QtWidgets.QDialog, FORM_CLASS):
         now = datetime.now()
         hoy = now.strftime('%Y/%m/%d %H:%M')
         texto2+=f"Date: <b>{hoy}</b><br>\n"
-        texto2+=f"<b>{option_s}</b><br>\n"        
+        texto2+=f"<b>{option_s}</b><br>\n"
+        texto2+="<b>ISO19157 MEASURES</b><br>"
+        texto2+="<b>Measure 62:</b> Misclassification matrix<br>"        
         texto2+=f"<center><table><tr><td></td><td>Reference Dataset</td><tr>\n"
         texto2+=f"<tr><td>Data set to evaluate</td><td>\n"
         texto2+="<table border=1><tr><td></td>\n"
@@ -664,30 +712,68 @@ class ThematicDialog(QtWidgets.QDialog, FORM_CLASS):
         for c in range(len(list_text_r_c)):
             texto2+=f"<td><b>{int(sum_c[0][c])}</b></td>\n"
         texto2+=f"<td><b>{int(total)}</b></td></tr></table></td></tr></table></center><br>\n"
-        texto2+="<b>T.E</b> = Total Evaluated <b>T.R.</b> = Total Reference<br><br>"
+        texto2+="<b>T.E</b> = Total Evaluated <b>T.R.</b> = Total Reference<br><br>\n"
+
+        texto2+="<b>Measure 63</b>: Relative misclassification matrix (%)<br>\n"
+        texto2+=f"<center><table><tr><td></td><td>Reference Dataset</td><tr>\n"
+        texto2+=f"<tr><td>Data set to evaluate</td><td>\n"
+        texto2+="<table border=1><tr><td></td>\n"
+        for n in list_text_r_c:
+            texto2+=f"<td style='background-color:#BCF5FF;'><b>{n}</b></td>"
+        cont=0
+        list_sum_f2=list()
+        texto2+="</tr>\n"
+        for n in list_text_e_c:
+            texto2+=f"<tr><td style='background-color:#BCF5FF;'><b>{n}</b></td>\n"
+            sum_f=0
+            for c in range(len(list_text_r_c)):
+                sum_f+=mat_conf[cont][c]
+            
+            list_sum_f2.append(sum_f)
+            for c in range(len(list_text_r_c)):    
+                if cont==c:
+                    color="#BCF5FF"
+                else:
+                    color="#FFFFFF"
+                rel = round((mat_conf[cont][c]/list_sum_f2[cont])*100,2)
+                if mat_conf[cont][c]==0 and cont!=c:
+                    if list_sum_f2[cont]==0:      
+                        texto2+=f"<td style='background-color:{color};color:white;'></td>\n"
+                    else:
+                        texto2+=f"<td style='background-color:{color};color:white;'>{rel}</td>\n"
+                else:
+                    if list_sum_f2[cont]==0:      
+                        texto2+=f"<td style='background-color:{color};color:white;'></td>\n"
+                    else:
+                        texto2+=f"<td style='background-color:{color};'>{rel}</td>\n"
+            texto2+="</tr>"
+            cont+=1
+        texto2+="</table></td></tr></table></center><br>"
 
         size_sample=len(pts_sample_r["OUTPUT"])
         if num_pts>size_sample:
             texto2+=f"There are <b>{int(num_pts-size_sample)}</b> invalid geometries that cannot be sampled<br>\n"
-        texto2+=f"Sample = <b>{size_sample}</b><br>\n"
-        texto2+=f"Classified sample = <b>{int(total)}</b><br>\n"
-        texto2+=f"True positives = <b>{int(t_pos)}</b><br>\n"
-        texto2+=f"Accuracy = <b>{accu}%</b><br>\n"
-
+        texto2+=f"<b>Measure 60:</b> misclassified objects = <b>{int(total-t_pos)}</b><br>\n"
+        texto2+=f"<b>Measure 61:</b> index of misclassified objects = <b>{round((total-t_pos)/total,2)}</b><br>\n"
         sum_tot=0
         for x in range(len(list_sum_f)):
             sum_tot +=list_sum_f[x]*sum_c[0][x]
 
         kappa = round(((total*t_pos)-sum_tot)/((total**2)-sum_tot),2)
-        texto2+=f"Total Kappa Statistic= <b>{kappa}</b><br>"
+        texto2+=f"<b>Measure 64:</b> Total Kappa Statistic= <b>{kappa}</b><br>\n"
+        texto2+="<center><table><tr><td><b>Kappa Statistic</b></td><td><b>Strength of agreement</b></td></tr>\n"
+        texto2+="<tr><td><b><0.00</b></td><td>Poor</td></tr>\n"
+        texto2+="<tr><td><b>0.00 - 0.20</b></td><td>Slight</td></tr>\n"
+        texto2+="<tr><td><b>0.21 - 0.40</b></td><td>Fair</td></tr>\n"
+        texto2+="<tr><td><b>0.41 - 0.60</b></td><td>Moderate</td></tr>\n"
+        texto2+="<tr><td><b>0.61 - 0.80</b></td><td>Substantial</td></tr>\n"
+        texto2+="<tr><td><b>0.81 - 1.00</b></td><td>Almost perfect</td></tr><tr><td colspan=2><h6>Landis JR, Koch GG 1977</h6></td><tr></table></center><br>\n"
 
-        texto2+="<center><table><tr><td><b>Kappa Statistic</b></td><td><b>Strength of agreement</b></td></tr>"
-        texto2+="<tr><td><b><0.00</b></td><td>Poor</td></tr>"
-        texto2+="<tr><td><b>0.00 - 0.20</b></td><td>Slight</td></tr>"
-        texto2+="<tr><td><b>0.21 - 0.40</b></td><td>Fair</td></tr>"
-        texto2+="<tr><td><b>0.41 - 0.60</b></td><td>Moderate</td></tr>"
-        texto2+="<tr><td><b>0.61 - 0.80</b></td><td>Substantial</td></tr>"
-        texto2+="<tr><td><b>0.81 - 1.00</b></td><td>Almost perfect</td></tr><tr><td colspan=2><h6>Landis JR, Koch GG 1977</h6></td><tr></table></center><br>"
+        texto2+="<b>OTHER MEASURES</b><br>\n"
+        texto2+=f"Sample = <b>{size_sample}</b><br>\n"        
+        texto2+=f"Classified sample = <b>{int(total)}</b><br>\n"
+        texto2+=f"True positives = <b>{int(t_pos)}</b><br>\n"
+        texto2+=f"Accuracy = <b>{accu}%</b><br>\n"
         
         cont=0
         texto2+="<center><table border=1><tr><td></td><td><b>user accuracy</b></td><td><b>producer accuracy</b></td></tr>\n"
@@ -762,6 +848,8 @@ class ThematicDialog(QtWidgets.QDialog, FORM_CLASS):
         texto+=f"Date: <b>{hoy}</b><br>"
         texto+=f"<b>{option_s}</b><br>"        
 
+        texto+="<b>ISO19157 MEASURES</b><br>"
+        texto+="<b>Measure 62:</b> Misclassification matrix<br>"
         texto+=f"<center><table><tr><td></td><td>Reference Dataset</td><tr>"
         texto+=f"<tr><td>Data set to evaluate</td><td>"
         texto+="<table border=1><tr><td></td>"
@@ -795,21 +883,53 @@ class ThematicDialog(QtWidgets.QDialog, FORM_CLASS):
         texto+=f"<td><b>{int(total)}</b></td></tr></table></td></tr></table></center><br>"
         texto+="<b>T.E</b> = Total Evaluated <b>T.R.</b> = Total Reference<br><br>"
 
+        texto+="<b>Measure 63:</b> Relative misclassification matrix (%)<br>"
+        texto+=f"<center><table><tr><td></td><td>Reference Dataset</td><tr>"
+        texto+=f"<tr><td>Data set to evaluate</td><td>"
+        texto+="<table border=1><tr><td></td>"
+        for n in list_text_r_c:
+            texto+=f"<td style='background-color:#BCF5FF;'><b>{n}</b></td>"
+        cont=0
+        list_sum_f2=list()
+        texto+="</tr>"
+        for n in list_text_e_c:
+            texto+=f"<tr><td style='background-color:#BCF5FF;'><b>{n}</b></td>"
+            sum_f=0
+            for c in range(len(list_text_r_c)):
+                sum_f+=mat_conf[cont][c]
+
+            list_sum_f2.append(sum_f)
+            for c in range(len(list_text_r_c)):    
+                if cont==c:
+                    color="#BCF5FF"
+                else:
+                    color="#FFFFFF"
+                rel = round((mat_conf[cont][c]/list_sum_f2[cont])*100,2)
+                if mat_conf[cont][c]==0 and cont!=c:
+                    if list_sum_f2[cont]==0:      
+                        texto+=f"<td style='background-color:{color};color:white;'></td>"
+                    else:
+                        texto+=f"<td style='background-color:{color};color:white;'>{rel}</td>"
+                else:
+                    if list_sum_f2[cont]==0:      
+                        texto+=f"<td style='background-color:{color};color:white;'></td>"
+                    else:
+                        texto+=f"<td style='background-color:{color};'>{rel}</td>"
+            texto+="</tr>"
+            cont+=1
+        texto+="</table></td></tr></table></center><br>"
+
         size_sample=len(pts_sample_r["OUTPUT"])
         if num_pts>size_sample:
             texto+=f"There are <b>{int(num_pts-size_sample)}</b> invalid geometries that cannot be sampled<br>"
-        texto+=f"Sample = <b>{size_sample}</b><br>"
-        texto+=f"Classified sample = <b>{int(total)}</b><br>"
-        texto+=f"True positives = <b>{int(t_pos)}</b><br>"
-        texto+=f"Accuracy = <b>{accu}%</b><br>"
+        texto+=f"<b>Measure 60:</b> misclassified objects = <b>{int(total-t_pos)}</b><br>"
+        texto+=f"<b>Measure 61:</b> index of misclassified objects = <b>{round((total-t_pos)/total,2)}</b><br>"
 
         sum_tot=0
         for x in range(len(list_sum_f)):
             sum_tot +=list_sum_f[x]*sum_c[0][x]
-
         kappa = round(((total*t_pos)-sum_tot)/((total**2)-sum_tot),2)
-        texto+=f"Total Kappa Statistic= <b>{kappa}</b><br>"
-
+        texto+=f"<b>Measure 64:</b> Total Kappa Statistic= <b>{kappa}</b><br>"
         texto+="<center><table><tr><td><b>Kappa Statistic</b></td><td><b>Strength of agreement</b></td></tr>"
         texto+="<tr><td><b>less 0.00</b></td><td>Poor</td></tr>"
         texto+="<tr><td><b>0.00 - 0.20</b></td><td>Slight</td></tr>"
@@ -817,6 +937,12 @@ class ThematicDialog(QtWidgets.QDialog, FORM_CLASS):
         texto+="<tr><td><b>0.41 - 0.60</b></td><td>Moderate</td></tr>"
         texto+="<tr><td><b>0.61 - 0.80</b></td><td>Substantial</td></tr>"
         texto+="<tr><td><b>0.81 - 1.00</b></td><td>Almost perfect</td></tr><tr><td colspan=2><h6>Landis JR, Koch GG 1977</h6></td><tr></table></center><br>"
+
+        texto+="<b>OTHER MEASURES</b><br>"
+        texto+=f"Sample = <b>{size_sample}</b><br>"        
+        texto+=f"Classified sample = <b>{int(total)}</b><br>"
+        texto+=f"True positives = <b>{int(t_pos)}</b><br>"
+        texto+=f"Accuracy = <b>{accu}%</b><br>"
 
         cont=0
         texto+="<center><table border=1><tr><td></td><td><b>user accuracy</b></td><td><b>producer accuracy</b></td></tr>"
@@ -844,7 +970,8 @@ class ThematicDialog(QtWidgets.QDialog, FORM_CLASS):
             table {border-collapse:collapse; border:1px; border-style:solid; border-color:darkblue; padding:3px; vertical-align:middle;} 
             td {padding: 3px;text-align: center;}</style>"""
                 
-        ventana.res_result.setHtml(doc+texto) 
+        ventana.res_result.setHtml(doc+texto)
+        ventana.res_result.move(0, 0) 
         ventana.exec_() 
 
     def save_html(self):

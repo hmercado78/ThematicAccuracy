@@ -4,28 +4,28 @@
 
 [general]
 name=Thematic accuracy
-qgisMinimumVersion=3.0
+qgisMinimumVersion=3.16
 description=Plugin for the evaluation of thematic accuracy on vector cartography
-version=0.1
+version=0.2
 author=Harold Mercado LLanos
 email=hmercado78@hotmail.com
 
 about=Thematic Accuracy Plugin QGIS for the evaluation of thematic accuracy on vector cartography. A polygon-type coverage layer and a reference source are required for the purchase, the plugin allows the user to select the type of sampling and the relationship between the attributes of both cartographies.
 
-tracker=http://bugs
-repository=http://repo
+tracker=https://github.com/hmercado78/ThematicAccuracy/issues
+repository=https://github.com/hmercado78/ThematicAccuracy
 # End of mandatory metadata
 
 # Recommended items:
 
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-# changelog=
+# changelog=The help button is included, the delete button is included in the Fields menu, and measure 63 is included: Relative misclassification matrix (%) (ISO19157).
 
 # Tags are comma separated with spaces allowed
-tags=python, thematic accuracy, sampling, ISO19157
+tags=python, thematic accuracy, sampling, ISO19157, exactitud temática, clasificación, quality
 
-homepage=http://homepage
+homepage=http://thematicaccuracy.hol.es/
 category=Vector
 icon=icon.png
 # experimental flag
@@ -43,5 +43,5 @@ Category of the plugin: Raster, Vector, Database or Web
 # category=
 
 # If the plugin can run on QGIS Server.
-server=False
+server=True
 
